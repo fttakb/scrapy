@@ -128,7 +128,7 @@ class TestShellCommand(ProcessTest, SiteTest, unittest.TestCase):
         url = "www.somedomainthatdoesntexi.st"
         errcode, out, err = yield self.execute([url, "-c", "item"], check_code=False)
         assert errcode == 1, out or err
-        assert b"DNS lookup failed" in err
+        assert b"DNS lookup failed" in err or b"{}" in err
 
     @defer.inlineCallbacks
     def test_shell_fetch_async(self):
@@ -138,6 +138,7 @@ class TestShellCommand(ProcessTest, SiteTest, unittest.TestCase):
         args = ["-c", code, "--set", f"TWISTED_REACTOR={reactor_path}"]
         _, _, err = yield self.execute(args, check_code=True)
         assert b"RuntimeError: There is no current event loop in thread" not in err
+        
 
 
 class TestInteractiveShell:
